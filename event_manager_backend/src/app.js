@@ -25,7 +25,7 @@ app.use('/docs', swaggerUi.serve, (req, res, next) => {
     ((protocol === 'http' && actualPort !== 80) ||
      (protocol === 'https' && actualPort !== 443));
   const fullHost = needsPort ? `${host}:${actualPort}` : host;
-  protocol = host.includes('kavia.ai') ? 'https' : protocol;
+  protocol = req.secure ? 'https' : protocol;
 
   const dynamicSpec = {
     ...swaggerSpec,
