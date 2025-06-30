@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/eventsync-api-62759-bc2acee1/event_manager_backend"
+}
