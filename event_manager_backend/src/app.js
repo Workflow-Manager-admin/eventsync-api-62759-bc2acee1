@@ -15,23 +15,23 @@ app.use(cors({
 app.set('trust proxy', true);
 app.use('/docs', swaggerUi.serve, (req, res, next) => {
   const host = req.get('host');           // may or may not include port
+  let protocol = req.protocol;          // http or https
+
   const actualPort = req.socket.localPort;
-  console.log(actualPort);
   const hasPort = host.includes(':');
-  console.log(hasPort);
+  
   const needsPort =
     !hasPort &&
     ((protocol === 'http' && actualPort !== 80) ||
      (protocol === 'https' && actualPort !== 443));
-  console.log(needsPort);
   const fullHost = needsPort ? `${host}:${actualPort}` : host;
-  console.log(fullHost);
+  protocol = host.includes('kavia.ai') ? 'https' : protocol;
 
   const dynamicSpec = {
     ...swaggerSpec,
     servers: [
       {
-        url: `${req.protocol}://${fullHost}`,
+        url: `${protocol}://${fullHost}`,
       },
     ],
   };
