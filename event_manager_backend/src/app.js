@@ -12,13 +12,26 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
+app.set('trust proxy', true);
 app.use('/docs', swaggerUi.serve, (req, res, next) => {
+  const host = req.get('host');           // may or may not include port
+  const actualPort = req.socket.localPort;
+  console.log(actualPort);
+  const hasPort = host.includes(':');
+  console.log(hasPort);
+  const needsPort =
+    !hasPort &&
+    ((protocol === 'http' && actualPort !== 80) ||
+     (protocol === 'https' && actualPort !== 443));
+  console.log(needsPort);
+  const fullHost = needsPort ? `${host}:${actualPort}` : host;
+  console.log(fullHost);
+
   const dynamicSpec = {
     ...swaggerSpec,
     servers: [
       {
-        url: `${req.protocol}://${req.get('host')}`,
+        url: `${req.protocol}://${fullHost}`,
       },
     ],
   };
